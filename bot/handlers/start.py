@@ -7,5 +7,5 @@ router = Router(name="start")
 
 
 @router.message(CommandStart())
-async def command_start_handler(message: Message) -> None:
-    await message.answer("Hello! I'm a bot!")
+async def command_start_handler(message: Message, state=None) -> None:
+    await message.answer(f"Hello! I'm a bot! {message.from_user.id}")
