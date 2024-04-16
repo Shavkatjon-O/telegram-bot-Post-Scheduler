@@ -2,6 +2,7 @@ import environ
 from pathlib import Path
 
 env = environ.Env()
+env.read_env(".env")
 
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -115,3 +116,7 @@ STATIC_URL = "static/"
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
+
+# Telegram Bot Settings
+
+TELEGRAM_BOT_TOKEN = env.str("TELEGRAM_BOT_TOKEN")
