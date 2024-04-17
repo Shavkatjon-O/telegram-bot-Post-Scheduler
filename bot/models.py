@@ -11,3 +11,10 @@ class TelegramAdmin(BaseModel):
 
     def __str__(self):
         return f"{self.chat_id}"
+
+
+class TelegramChat(BaseModel):
+    chat_id = models.BigIntegerField(unique=True)
+
+    def __str__(self):
+        return f"{self.chat_id}"
