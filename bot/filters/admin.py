@@ -16,6 +16,6 @@ class AdminFilter(BaseFilter):
         )()
 
         if not is_admin:
-            await message.answer("Доступ запрещен.")
+            await message.answer("Siz administrator emassiz! 😔")
 
         return is_admin

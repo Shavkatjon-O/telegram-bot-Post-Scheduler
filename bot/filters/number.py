@@ -12,7 +12,7 @@ class NumberFilter(BaseFilter):
         try:
             float(message.text)
         except ValueError:
-            await message.answer("Это не число. Попробуйте еще раз.")
+            await message.answer("Bu raqam emas! 😔")
 
             return False
         else:
