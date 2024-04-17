@@ -1,8 +1,8 @@
 from aiogram.fsm.state import State, StatesGroup
 
 
-class ManageStates(StatesGroup):
-    MANAGE = State()
+class StartStates(StatesGroup):
+    START = State()
 
 
 class AdminStates(StatesGroup):
