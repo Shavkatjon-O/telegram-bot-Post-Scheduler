@@ -26,7 +26,7 @@ async def command_admin_handler(message: Message, state: FSMContext) -> None:
 
     telegram_admins = await sync_to_async(TelegramAdmin.objects.all)()
 
-    message_text = "Список админов 💎\n\n"
+    message_text = "Adminlar ro'yxati 💎\n\n"
 
     async for admin in telegram_admins:
         if not admin.username:
@@ -63,7 +63,7 @@ async def return_to_menu_handler(message: Message, state: FSMContext) -> None:
 async def create_or_delete_handler(message: Message, state: FSMContext) -> None:
     """Handler for creating or deleting admin."""
 
-    message_text = "Введите идентификатор пользователя 🆔"
+    message_text = "Foydalanuvchi identifikatorini kiriting 🆔"
     await message.answer(text=message_text, reply_markup=CancelKeyboard.get_keyboard())
 
     await state.update_data(action=message.text)
@@ -89,13 +89,14 @@ async def create_or_delete_action_handler(message: Message, state: FSMContext) -
         chat_id = message.text
         chat_info = await bot.get_chat(chat_id)
     except Exception as e:
-        await message.answer(text="Пользователь не найден. 😔")
-
+        await message.answer(text="Foydalanuvchi topilmadi. 😔")
         logger.error(e)
         return
 
     if chat_info.id == message.from_user.id:
-        await message.answer(text="Вы не можете добавить или удалить себя. 😔")
+        await message.answer(
+            text="Siz o'zingizni qo'shish yoki o'chirish mumkin emas. 😔"
+        )
         return
 
     if action == AdminKeyboards.CREATE:
@@ -106,9 +107,9 @@ async def create_or_delete_action_handler(message: Message, state: FSMContext) -
                 first_name=chat_info.first_name,
                 last_name=chat_info.last_name,
             )
-            await message.answer(text="Пользователь добавлен в админы. 🎉")
+            await message.answer(text="Foydalanuvchi adminlar ro'yxatiga qo'shildi. 🎉")
         except Exception as e:
-            await message.answer(text="Пользователь уже является админом. 😔")
+            await message.answer(text="Foydalanuvchi allaqachon admin. 😔")
 
             logger.error(e)
             return
@@ -120,14 +121,16 @@ async def create_or_delete_action_handler(message: Message, state: FSMContext) -
             if telegram_admin:
                 await sync_to_async(telegram_admin.delete)()
 
-            await message.answer(text="Пользователь удален из админов. 🎉")
+            await message.answer(
+                text="Foydalanuvchi adminlar ro'yxatidan o'chirildi. 🎉"
+            )
         except Exception as e:
-            await message.answer(text="Пользователь не является админом. 😔")
+            await message.answer(text="Foydalanuvchi admin emas. 😔")
 
             logger.error(e)
             return
     else:
-        await message.answer(text="Произошла ошибка. Попробуйте еще раз. 😔")
+        await message.answer(text="Xatolik yuz berdi. Qayta urinib ko'ring. 😔")
 
     await state.clear()
     await command_admin_handler(message, state)

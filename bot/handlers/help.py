@@ -10,7 +10,7 @@ router = Router(name="help")
 
 @router.message(Command("help"))
 async def command_help_handler(message: Message):
-    # help message to give full information about the bot
+    """Handler for /help command."""
 
     bot_info = await bot.get_me()
 
