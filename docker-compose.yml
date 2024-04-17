@@ -1,0 +1,14 @@
+version: '3.8'
+
+services:
+  web:
+    build: .
+    command: python main.py
+    volumes:
+      - .:/home/app/web
+      - ./db.sqlite3:/home/app/web/db.sqlite3
+    ports:
+      - "8000:8000"
+
+volumes:
+  sqlite_data:
