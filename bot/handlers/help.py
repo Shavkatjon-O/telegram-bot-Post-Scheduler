@@ -16,8 +16,8 @@ async def command_help_handler(message: Message):
 
     message_text = (
         "Bot haqida batafsil ma'lumot:\n\n"
-        f"🤖 Botning ismi: {bot_info.full_name}\n\n"
-        f"👤 Botning username: @{bot_info.username}\n"
+        f"🤖 Botning ismi: {bot_info.full_name}\n"
+        f"👤 Botning username: @{bot_info.username}\n\n"
         "Botni ishlatish uchun quyidagi buyruqlardan foydalanishingiz mumkin:\n\n"
         "/start - Botni ishga tushirish\n"
         "/admin - Admin paneliga kirish\n"
