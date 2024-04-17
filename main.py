@@ -9,6 +9,7 @@ from django.conf import settings
 
 from bot.core.loader import dp, bot
 from bot.handlers import get_handlers_rounter
+from bot.utils.notify import notify_admins
 
 from loguru import logger
 
@@ -33,6 +34,8 @@ async def on_startup() -> None:
     logger.info(f"Groups Mode  - {states[bot_info.can_join_groups]}")
     logger.info(f"Privacy Mode - {states[not bot_info.can_read_all_group_messages]}")
     logger.info(f"Inline Mode  - {states[bot_info.supports_inline_queries]}")
+
+    await notify_admins()
 
     logger.info("Bot started!")
 
