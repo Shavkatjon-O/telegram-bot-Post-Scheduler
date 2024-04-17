@@ -3,9 +3,9 @@ from aiogram.utils.keyboard import ReplyKeyboardBuilder, KeyboardButton
 
 
 class AdminKeyboards:
-    CREATE = "Создать ➕"
-    DELETE = "Удалить ➖"
-    MENU = "Главное меню 🏠"
+    CREATE = "Yaratish ➕"
+    DELETE = "O'chirish ➖"
+    MENU = "Asosiy menyu 🏠"
 
     @classmethod
     def get_keyboard(cls) -> ReplyKeyboardMarkup:
@@ -17,12 +17,13 @@ class AdminKeyboards:
 
         keyboard = ReplyKeyboardBuilder(markup=buttons)
         keyboard.adjust(2, 1)
-        keyboard = keyboard.as_markup(resize_keyboard=True)
-        return keyboard
+        return keyboard.as_markup(
+            resize_keyboard=True,
+        )
 
 
 class CancelKeyboard:
-    CANCEL = "Отмена ❌"
+    CANCEL = "Bekor qilish ❌"
 
     @classmethod
     def get_keyboard(cls) -> ReplyKeyboardMarkup:
