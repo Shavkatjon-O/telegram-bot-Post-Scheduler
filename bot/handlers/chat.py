@@ -10,5 +10,5 @@ router = Router(name="chat")
 
 
 @router.message(Command("chat"))
-async def command_chat_handler(message: Message):
+async def command_chat_handler(message: Message, state=None):
     await message.answer("Hello, channel!", reply_markup=ChatKeyboard.get_keyboard())

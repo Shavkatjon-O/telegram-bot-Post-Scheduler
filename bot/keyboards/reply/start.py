@@ -24,7 +24,7 @@ class StartKeyboard:
         )
 
 
-def get_menu_buttons():
+def get_buttons():
     from bot.handlers.admin import command_admin_handler
     from bot.handlers.chat import command_chat_handler
     from bot.handlers.post import command_post_handler
