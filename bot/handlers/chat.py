@@ -4,7 +4,7 @@ from aiogram.fsm.context import FSMContext
 from aiogram.types import Message
 
 from bot.states.admins import ChatStates
-from bot.keyboards.reply.chat import ChatKeyboard, CancelKeyboard
+from bot.keyboards.reply.chat import ChatKeyboard, SelectChatKeyboard
 from bot.handlers.start import command_start_handler
 
 
@@ -39,13 +39,15 @@ async def create_or_delete_handler(message: Message, state: FSMContext) -> None:
     """Handler for creating or deleting chats."""
 
     message_text = "Kanal @nomini kiriting 📝"
-    await message.answer(text=message_text, reply_markup=CancelKeyboard.get_keyboard())
+    await message.answer(
+        text=message_text, reply_markup=SelectChatKeyboard.get_keyboard()
+    )
 
     await state.update_data(action=message.text)
     await state.set_state(ChatStates.CREATE_OR_DELETE)
 
 
-@router.message(ChatStates.CREATE_OR_DELETE, F.text == CancelKeyboard.CANCEL)
+@router.message(ChatStates.CREATE_OR_DELETE, F.text == SelectChatKeyboard.CANCEL)
 async def cancel_action_handler(message: Message, state: FSMContext) -> None:
     """Handler for cancelling the action."""
 
