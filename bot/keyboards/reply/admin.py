@@ -1,4 +1,4 @@
-from aiogram.types import ReplyKeyboardMarkup
+from aiogram.types import ReplyKeyboardMarkup, KeyboardButtonRequestUser
 from aiogram.utils.keyboard import ReplyKeyboardBuilder, KeyboardButton
 
 
@@ -18,3 +18,12 @@ class AdminMenuKeyboard:
         keyboard.adjust(2, 1)
 
         return keyboard.as_markup(resize_keyboard=True)
+
+
+def get_create_admin_keyboard() -> ReplyKeyboardMarkup:
+    button = KeyboardButton(
+        text="Admin ni tanlang 🧑‍💼",
+        request_user=KeyboardButtonRequestUser(request_id=1, user_is_bot=False),
+    )
+    markup = ReplyKeyboardMarkup(keyboard=[[button]], resize_keyboard=True)
+    return markup
