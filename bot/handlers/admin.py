@@ -40,11 +40,18 @@ async def admin_create_handler(message: Message, state: FSMContext) -> None:
 
 @router.message(AdminStates.CREATE)
 async def admin_create_user_handler(message: Message, state: FSMContext) -> None:
-
     chat_id = message.user_shared.user_id
-    await sync_to_async(TelegramAdmin.objects.create)(chat_id=chat_id)
 
-    message_text = "Admin muvaffaqiyatli qo'shildi! 🧑‍💼"
+    admin, created = await sync_to_async(TelegramAdmin.objects.get_or_create)(
+        chat_id=chat_id
+    )
+
+    if not created:
+        message_text = "Bu foydalanuvchi allaqachon admin! ❌"
+    else:
+        message_text = "Admin muvaffaqiyatli yaratildi! ✅"
 
     await message.answer(text=message_text)
-    await state.set_state(AdminStates.ADMIN)
+
+    await state.clear()
+    await command_start_handler(message, state)
