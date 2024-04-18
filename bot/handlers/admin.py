@@ -3,6 +3,7 @@ from aiogram.filters import Command
 from aiogram.fsm.context import FSMContext
 from aiogram.types import Message
 
+from bot.handlers.start import command_start_handler
 from bot.keyboards.reply.admin import AdminMenuKeyboard, get_create_admin_keyboard
 from bot.states.admins import AdminStates
 
@@ -12,8 +13,15 @@ router = Router(name="admin")
 
 @router.message(Command("admin"))
 async def command_admin_handler(message: Message, state: FSMContext) -> None:
+    message_text = "Admin paneliga xush kelibsiz! 🧑‍💼"
 
-    # TODO: send list of admins
+    await message.answer(
+        text=message_text, reply_markup=AdminMenuKeyboard.get_keyboard()
+    )
+    await state.set_state(AdminStates.ADMIN)
 
-    messsage_text = "Adminlar ro'yxati 🧑‍💼"
-    await message.answer(messsage_text, reply_markup=AdminMenuKeyboard.get_keyboard())
+
+@router.message(AdminStates.ADMIN, F.text == AdminMenuKeyboard.MENU)
+async def admin_menu_handler(message: Message, state: FSMContext) -> None:
+    await state.clear()
+    await command_start_handler(message, state)
