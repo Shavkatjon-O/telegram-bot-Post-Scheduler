@@ -51,3 +51,13 @@ async def cancel_action_handler(message: Message, state: FSMContext) -> None:
 
     await state.clear()
     await command_chat_handler(message, state)
+
+
+@router.message(ChatStates.CREATE_OR_DELETE)
+async def create_or_delete_chat_handler(message: Message, state: FSMContext) -> None:
+    """Handler for creating or deleting chats."""
+
+    await message.answer("Kanal qo'shildi yoki o'chirildi 🎉")
+
+    await state.clear()
+    await command_chat_handler(message, state)
