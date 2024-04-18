@@ -22,7 +22,7 @@ class AdminMenuKeyboard:
 
 def get_create_admin_keyboard() -> ReplyKeyboardMarkup:
     button = KeyboardButton(
-        text="Admin ni tanlang 🧑‍💼",
+        text="Admin tanlash 🧑‍💼",
         request_user=KeyboardButtonRequestUser(request_id=1, user_is_bot=False),
     )
     markup = ReplyKeyboardMarkup(keyboard=[[button]], resize_keyboard=True)
