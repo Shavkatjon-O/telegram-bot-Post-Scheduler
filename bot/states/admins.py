@@ -8,3 +8,8 @@ class StartStates(StatesGroup):
 class AdminStates(StatesGroup):
     ADMIN = State()
     CREATE_OR_DELETE = State()
+
+
+class ChatStates(StatesGroup):
+    CHAT = State()
+    CREATE_OR_DELETE = State()

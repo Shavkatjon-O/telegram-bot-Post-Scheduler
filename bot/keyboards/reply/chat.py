@@ -3,8 +3,6 @@ from aiogram.utils.keyboard import ReplyKeyboardBuilder, KeyboardButton
 
 
 class ChatKeyboard:
-    """Keyboards for chat handlers."""
-
     CREATE = "Qo'shish ➕"
     DELETE = "O'chirish ➖"
     MENU = "Asosiy menyu 🏠"
@@ -21,5 +19,19 @@ class ChatKeyboard:
         keyboard = ReplyKeyboardBuilder(markup=buttons)
         keyboard.adjust(2, 1)
         return keyboard.as_markup(
+            resize_keyboard=True,
+        )
+
+
+class CancelKeyboard:
+    CANCEL = "Bekor qilish ❌"
+
+    @classmethod
+    def get_keyboard(cls) -> ReplyKeyboardMarkup:
+        """Get cancel keyboard."""
+        return ReplyKeyboardMarkup(
+            keyboard=[
+                [KeyboardButton(text=cls.CANCEL)],
+            ],
             resize_keyboard=True,
         )
