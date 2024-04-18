@@ -53,5 +53,7 @@ async def admin_create_user_handler(message: Message, state: FSMContext) -> None
 
     await message.answer(text=message_text)
 
+    # TODO: fix this code
+
     await state.clear()
     await command_start_handler(message, state)
