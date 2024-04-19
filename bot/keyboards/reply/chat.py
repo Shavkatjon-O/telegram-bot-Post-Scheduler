@@ -1,6 +1,9 @@
 from aiogram.types import ReplyKeyboardMarkup, KeyboardButtonRequestChat
 from aiogram.utils.keyboard import ReplyKeyboardBuilder, KeyboardButton
 
+from asgiref.sync import sync_to_async
+from bot.models import TelegramChat
+
 
 class ChatMenuKeyboard:
     CREATE = "Qo'shish ➕"
@@ -64,3 +67,18 @@ class SelectChatKeyboard:
         return keyboard.as_markup(
             resize_keyboard=True,
         )
+
+
+@sync_to_async
+def get_delete_chat_keyboard() -> ReplyKeyboardMarkup:
+    chats = TelegramChat.objects.all()
+
+    buttons = [
+        [KeyboardButton(text=f"{chat.chat_id} - {chat.title}")] for chat in chats
+    ]
+    buttons.append([KeyboardButton(text="Orqaga 🔙")])
+
+    keyboard = ReplyKeyboardBuilder(markup=buttons)
+    keyboard.adjust(1, 1)
+
+    return keyboard.as_markup(resize_keyboard=True)
