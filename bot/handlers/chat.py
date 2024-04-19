@@ -3,7 +3,6 @@ from aiogram.filters import Command, or_f
 from aiogram.fsm.context import FSMContext
 from aiogram.types import Message
 
-
 from asgiref.sync import sync_to_async
 
 from bot.states.admins import ChatStates
@@ -34,3 +33,9 @@ async def command_chat_handler(message: Message, state: FSMContext):
 
     await message.answer(text, reply_markup=markup)
     await state.set_state(ChatStates.CHAT)
+
+
+@router.message(ChatStates.CHAT, F.text == ChatMenuKeyboard.MENU)
+async def chat_menu_handler(message: Message, state: FSMContext):
+    await state.clear()
+    await command_start_handler(message, state)
