@@ -1,6 +1,9 @@
 from aiogram.types import ReplyKeyboardMarkup, KeyboardButtonRequestUser
 from aiogram.utils.keyboard import ReplyKeyboardBuilder, KeyboardButton
 
+from asgiref.sync import sync_to_async
+from bot.models import TelegramAdmin
+
 
 class AdminMenuKeyboard:
     CREATE = "Qo'shish 📝"
@@ -27,3 +30,19 @@ def get_create_admin_keyboard() -> ReplyKeyboardMarkup:
     )
     markup = ReplyKeyboardMarkup(keyboard=[[button]], resize_keyboard=True)
     return markup
+
+
+@sync_to_async
+def get_delete_admin_keyboard() -> ReplyKeyboardMarkup:
+    admins = TelegramAdmin.objects.all()
+
+    buttons = [
+        [KeyboardButton(text=f"{admin.chat_id} - {admin.first_name}")]
+        for admin in admins
+    ]
+    buttons.append([KeyboardButton(text="Orqaga 🔙")])
+
+    keyboard = ReplyKeyboardBuilder(markup=buttons)
+    keyboard.adjust(1, 1)
+
+    return keyboard.as_markup(resize_keyboard=True)
