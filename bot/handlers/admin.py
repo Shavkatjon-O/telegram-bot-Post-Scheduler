@@ -40,3 +40,13 @@ async def command_admin_handler(message: Message, state: FSMContext):
 async def admin_menu_handler(message: Message, state: FSMContext):
     await state.clear()
     await command_start_handler(message, state)
+
+
+@router.message(AdminStates.ADMIN, F.text == AdminMenuKeyboard.CREATE)
+async def create_admin_handler(message: Message, state: FSMContext):
+
+    text = " 📝 Yangi admin qo'shish uchun bot foydalanuvchisini tanlang!"
+    markup = get_create_admin_keyboard()
+
+    await message.answer(text, reply_markup=markup)
+    await state.set_state(AdminStates.CREATE)
