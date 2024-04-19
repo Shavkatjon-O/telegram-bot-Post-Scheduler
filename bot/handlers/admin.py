@@ -28,4 +28,9 @@ def get_admin_list() -> str:
 
 
 @router.message(Command("admin"))
-async def command_admin_handler(message: Message, state: FSMContext): ...
+async def command_admin_handler(message: Message, state: FSMContext):
+    text = await get_admin_list()
+    markup = AdminMenuKeyboard.get_keyboard()
+
+    await message.answer(text, reply_markup=markup)
+    await state.set_state(AdminStates.ADMIN)
