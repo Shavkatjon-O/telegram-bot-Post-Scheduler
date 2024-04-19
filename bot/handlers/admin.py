@@ -15,19 +15,18 @@ router = Router(name="admin")
 
 
 @router.message(Command("admin"))
-async def command_admin_handler(message: Message, state: FSMContext) -> None:
+async def command_admin_handler(message: Message, state: FSMContext):
     """Handler for the /admin command."""
 
     message_text = "Admin paneliga xush kelibsiz! 🧑‍💼"
+    markup = AdminMenuKeyboard.get_keyboard()
 
-    await message.answer(
-        text=message_text, reply_markup=AdminMenuKeyboard.get_keyboard()
-    )
+    await message.answer(text=message_text, reply_markup=markup)
     await state.set_state(AdminStates.ADMIN)
 
 
 @router.message(AdminStates.ADMIN, F.text == AdminMenuKeyboard.MENU)
-async def admin_menu_handler(message: Message, state: FSMContext) -> None:
+async def admin_menu_handler(message: Message, state: FSMContext):
     """Handler for the "Menu" button in the admin panel."""
 
     await state.clear()
@@ -35,33 +34,31 @@ async def admin_menu_handler(message: Message, state: FSMContext) -> None:
 
 
 @router.message(AdminStates.ADMIN, F.text == AdminMenuKeyboard.CREATE)
-async def admin_create_handler(message: Message, state: FSMContext) -> None:
+async def admin_create_handler(message: Message, state: FSMContext):
     """Handler for the "Create" button in the admin panel."""
 
     message_text = "Yangi adminni tanlang! 🧑‍💼"
+    markup = get_create_admin_keyboard()
 
-    await message.answer(text=message_text, reply_markup=get_create_admin_keyboard())
+    await message.answer(text=message_text, reply_markup=markup)
     await state.set_state(AdminStates.CREATE)
 
 
 @router.message(AdminStates.CREATE)
-async def admin_create_user_handler(message: Message, state: FSMContext) -> None:
+async def admin_create_user_handler(message: Message, state: FSMContext):
     """Handler for creating a new admin."""
 
-    chat_id = message.user_shared.user_id
+    try:
+        chat_id = message.user_shared.user_id
+        await sync_to_async(TelegramAdmin.objects.create)(chat_id=chat_id)
 
-    admin, created = await sync_to_async(TelegramAdmin.objects.get_or_create)(
-        chat_id=chat_id
-    )
-
-    if not created:
-        message_text = "Bu foydalanuvchi allaqachon admin! ❌"
-    else:
         message_text = "Admin muvaffaqiyatli yaratildi! ✅"
+    except Exception as e:
+        message_text = "Bu foydalanuvchi allaqachon admin! ❌"
 
-    await message.answer(
-        text=message_text, reply_markup=AdminMenuKeyboard.get_keyboard()
-    )
+    markup = AdminMenuKeyboard.get_keyboard()
+
+    await message.answer(text=message_text, reply_markup=markup)
     await state.set_state(AdminStates.ADMIN)
 
 
@@ -70,12 +67,11 @@ async def admin_delete_handler(message: Message, state: FSMContext) -> None:
     """Handler for the "Delete" button in the admin panel."""
 
     admins = await sync_to_async(TelegramAdmin.objects.all)()
-    message_text = "O'chirish uchun foydalanuvchini tanlang! 🧑‍💼"
+    keyboard = [[KeyboardButton(text=str(admin.chat_id))] async for admin in admins]
 
-    markup = ReplyKeyboardMarkup(
-        keyboard=[[KeyboardButton(text=str(admin.chat_id))] async for admin in admins],
-        resize_keyboard=True,
-    )
+    message_text = "O'chirish uchun foydalanuvchini tanlang! 🧑‍💼"
+    markup = ReplyKeyboardMarkup(keyboard=keyboard, resize_keyboard=True)
+
     await message.answer(text=message_text, reply_markup=markup)
     await state.set_state(AdminStates.DELETE)
 
@@ -86,16 +82,14 @@ async def admin_delete_user_handler(message: Message, state: FSMContext) -> None
 
     try:
         chat_id = int(message.text)
+        message_text = "Admin o'chirildi! ✅"
+
         admin = await sync_to_async(TelegramAdmin.objects.get)(chat_id=chat_id)
         await sync_to_async(admin.delete)()
-
-        message_text = "Admin o'chirildi! ✅"
-        await message.answer(
-            text=message_text, reply_markup=AdminMenuKeyboard.get_keyboard()
-        )
     except Exception:
         message_text = "Foydalanuvchi topilmadi! ❌"
-        await message.answer(
-            text=message_text, reply_markup=AdminMenuKeyboard.get_keyboard()
-        )
+
+    markup = AdminMenuKeyboard.get_keyboard()
+
+    await message.answer(text=message_text, reply_markup=markup)
     await state.set_state(AdminStates.ADMIN)
