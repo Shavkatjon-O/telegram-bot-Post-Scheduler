@@ -18,24 +18,26 @@ router = Router(name="admin")
 async def get_admins_message() -> str:
     """Returns a list of all admins in the database."""
 
-    message_text = "Adminlar ro'yxati 💎\n\n"
+    text = "Adminlar ro'yxati 💎\n\n"
     admins = await sync_to_async(TelegramAdmin.objects.all)()
 
     async for admin in admins:
         if not admin.username:
             try:
-                chat_info = await bot.get_chat(admin.chat_id)
-
-                admin.username = chat_info.username
-                admin.first_name = chat_info.first_name
-                admin.last_name = chat_info.last_name
-
-                await sync_to_async(admin.save)()
+                chat = await bot.get_chat(admin.chat_id)
             except Exception:
                 continue
-        message_text += f"🆔 <code>{admin.chat_id}</code> - {admin.first_name}\n\n"
 
-    return message_text
+            admin.username = chat.username
+            admin.first_name = chat.first_name
+            admin.last_name = chat.last_name
+
+        text += f"🆔 {admin.chat_id} - {admin.first_name}\n\n"
+
+    await sync_to_async(TelegramAdmin.objects.bulk_update)(
+        admins, ["username", "first_name", "last_name"]
+    )
+    return text
 
 
 @router.message(Command("admin"))
