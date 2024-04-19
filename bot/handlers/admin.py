@@ -86,6 +86,12 @@ async def delete_select_admin_handler(message: Message, state: FSMContext):
     await state.set_state(AdminStates.DELETE)
 
 
+@router.message(AdminStates.DELETE, F.text == "Orqaga 🔙")
+async def back_to_admin_menu_handler(message: Message, state: FSMContext):
+    await state.clear()
+    await command_admin_handler(message, state)
+
+
 @router.message(AdminStates.DELETE)
 async def delete_admin_handler(message: Message, state: FSMContext):
     try:
