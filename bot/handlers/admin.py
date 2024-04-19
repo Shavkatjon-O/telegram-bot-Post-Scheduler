@@ -6,6 +6,7 @@ from aiogram.types import Message, ReplyKeyboardMarkup, KeyboardButton
 from asgiref.sync import sync_to_async
 
 from bot.models import TelegramAdmin
+from bot.filters.number import NumberFilter
 from bot.handlers.start import command_start_handler
 from bot.keyboards.reply.admin import AdminMenuKeyboard, get_create_admin_keyboard
 from bot.states.admins import AdminStates
@@ -102,16 +103,19 @@ async def admin_delete_handler(message: Message, state: FSMContext) -> None:
     await state.set_state(AdminStates.DELETE)
 
 
-@router.message(AdminStates.DELETE)
+@router.message(AdminStates.DELETE, NumberFilter())
 async def admin_delete_user_handler(message: Message, state: FSMContext) -> None:
     """Handler for deleting an admin."""
 
-    try:
-        chat_id = int(message.text)
-        message_text = "Admin o'chirildi! ✅"
+    if message.text == message.from_user.id:
+        await message.answer("O'zingizni o'chirib bo'lmaydi! ❌")
+        return
 
-        admin = await sync_to_async(TelegramAdmin.objects.get)(chat_id=chat_id)
+    try:
+        admin = await sync_to_async(TelegramAdmin.objects.get)(chat_id=message.text)
         await sync_to_async(admin.delete)()
+
+        message_text = "Admin o'chirildi! ✅"
     except Exception:
         message_text = "Foydalanuvchi topilmadi! ❌"
 
