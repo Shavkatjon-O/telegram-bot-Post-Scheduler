@@ -43,10 +43,29 @@ async def admin_menu_handler(message: Message, state: FSMContext):
 
 
 @router.message(AdminStates.ADMIN, F.text == AdminMenuKeyboard.CREATE)
-async def create_admin_handler(message: Message, state: FSMContext):
-
+async def create_select_admin_handler(message: Message, state: FSMContext):
     text = " 📝 Yangi admin qo'shish uchun bot foydalanuvchisini tanlang!"
     markup = get_create_admin_keyboard()
 
     await message.answer(text, reply_markup=markup)
     await state.set_state(AdminStates.CREATE)
+
+
+@router.message(AdminStates.CREATE)
+async def create_admin_handler(message: Message, state: FSMContext):
+    chat_id = message.user_shared.user_id
+    chat_info = await bot.get_chat(chat_id)
+
+    try:
+        await sync_to_async(TelegramAdmin.objects.get_or_create)(
+            chat_id=chat_info.id,
+            first_name=chat_info.first_name,
+            last_name=chat_info.last_name,
+            username=chat_info.username,
+        )
+        text = f"🆔 {chat_info.id} - {chat_info.first_name} - @{chat_info.username} admin qo'shildi!"
+    except Exception:
+        text = "❌ Xatolik yuz berdi! Admin qo'shilmadi!"
+
+    await message.answer(text, reply_markup=AdminMenuKeyboard.get_keyboard())
+    await state.set_state(AdminStates.ADMIN)
