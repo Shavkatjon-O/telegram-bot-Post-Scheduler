@@ -7,15 +7,22 @@ django.setup()
 
 from django.conf import settings
 
-from bot.core.loader import dp, bot
 from bot.handlers import get_handlers_rounter
+from bot.core.loader import dp, bot, scheduler
 from bot.utils.notify import notify_admins
+
+from bot.schedule import send_post
+
 
 from loguru import logger
 
 
 async def on_startup() -> None:
     logger.info("Starting bot...")
+
+    if settings.DEBUG:
+        scheduler.add_job(send_post, "interval", seconds=10)
+        scheduler.start()  # Background tasks scheduler
 
     dp.include_router(get_handlers_rounter())
 
