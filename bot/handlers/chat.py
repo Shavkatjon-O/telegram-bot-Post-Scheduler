@@ -29,4 +29,8 @@ def get_chat_list() -> str:
 
 @router.message(Command("chat"))
 async def command_chat_handler(message: Message, state: FSMContext):
-    pass
+    text = await get_chat_list()
+    markup = ChatKeyboard.get_keyboard()
+
+    await message.answer(text, reply_markup=markup)
+    await state.set_state(ChatStates.CHAT)
