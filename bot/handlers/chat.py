@@ -72,5 +72,8 @@ async def chat_selected_handler(message: Message, state: FSMContext):
         text = "❌ Chat qo'shishda xatolik yuz berdi!"
         logger.error(f"Error: {e}")
 
+    chat_list = await get_chat_list()
+    await message.answer(chat_list)
+
     await message.answer(text, reply_markup=ChatMenuKeyboard.get_keyboard())
     await state.set_state(ChatStates.CHAT)
