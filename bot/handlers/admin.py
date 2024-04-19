@@ -16,6 +16,8 @@ router = Router(name="admin")
 
 @router.message(Command("admin"))
 async def command_admin_handler(message: Message, state: FSMContext) -> None:
+    """Handler for the /admin command."""
+
     message_text = "Admin paneliga xush kelibsiz! 🧑‍💼"
 
     await message.answer(
@@ -26,12 +28,16 @@ async def command_admin_handler(message: Message, state: FSMContext) -> None:
 
 @router.message(AdminStates.ADMIN, F.text == AdminMenuKeyboard.MENU)
 async def admin_menu_handler(message: Message, state: FSMContext) -> None:
+    """Handler for the "Menu" button in the admin panel."""
+
     await state.clear()
     await command_start_handler(message, state)
 
 
 @router.message(AdminStates.ADMIN, F.text == AdminMenuKeyboard.CREATE)
 async def admin_create_handler(message: Message, state: FSMContext) -> None:
+    """Handler for the "Create" button in the admin panel."""
+
     message_text = "Yangi adminni tanlang! 🧑‍💼"
 
     await message.answer(text=message_text, reply_markup=get_create_admin_keyboard())
@@ -40,6 +46,8 @@ async def admin_create_handler(message: Message, state: FSMContext) -> None:
 
 @router.message(AdminStates.CREATE)
 async def admin_create_user_handler(message: Message, state: FSMContext) -> None:
+    """Handler for creating a new admin."""
+
     chat_id = message.user_shared.user_id
 
     admin, created = await sync_to_async(TelegramAdmin.objects.get_or_create)(
