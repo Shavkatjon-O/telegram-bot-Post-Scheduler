@@ -7,7 +7,7 @@ from aiogram.types import Message
 from asgiref.sync import sync_to_async
 
 from bot.states.admins import ChatStates
-from bot.keyboards.reply.chat import ChatKeyboard, SelectChatKeyboard
+from bot.keyboards.reply.chat import ChatMenuKeyboard, SelectChatKeyboard
 from bot.handlers.start import command_start_handler
 from bot.models import TelegramChat
 
@@ -30,7 +30,7 @@ def get_chat_list() -> str:
 @router.message(Command("chat"))
 async def command_chat_handler(message: Message, state: FSMContext):
     text = await get_chat_list()
-    markup = ChatKeyboard.get_keyboard()
+    markup = ChatMenuKeyboard.get_keyboard()
 
     await message.answer(text, reply_markup=markup)
     await state.set_state(ChatStates.CHAT)
