@@ -94,3 +94,23 @@ async def chat_delete_handler(message: Message, state: FSMContext):
 async def chat_delete_cancel_handler(message: Message, state: FSMContext):
     await state.clear()
     await command_chat_handler(message, state)
+
+
+@router.message(ChatStates.DELETE)
+async def delete_chat_handler(message: Message, state: FSMContext):
+    try:
+        chat_id = int(message.text.split(" - ")[0])
+
+        admin = await sync_to_async(TelegramChat.objects.get)(chat_id=chat_id)
+        await sync_to_async(admin.delete)()
+
+        text = "✅ Chat muvaffaqiyatli o'chirildi!"
+    except Exception as e:
+        text = "❌ Xatolik yuz berdi! Admin o'chirilmadi!"
+        logger.error(f"Error: {e}")
+
+    chat_list = await get_chat_list()
+    await message.answer(chat_list)
+
+    await message.answer(text, reply_markup=ChatMenuKeyboard.get_keyboard())
+    await state.set_state(ChatStates.CHAT)
