@@ -35,7 +35,7 @@ async def on_startup() -> None:
     logger.info(f"Privacy Mode - {states[not bot_info.can_read_all_group_messages]}")
     logger.info(f"Inline Mode  - {states[bot_info.supports_inline_queries]}")
 
-    await notify_admins()
+    # await notify_admins()
 
     logger.info("Bot started!")
 
