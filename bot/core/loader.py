@@ -4,6 +4,10 @@ from aiogram.enums import ParseMode
 
 from django.conf import settings
 
+from apscheduler.schedulers.asyncio import AsyncIOScheduler
+
+scheduler = AsyncIOScheduler()
+
 token = settings.TELEGRAM_BOT_TOKEN
 
 bot = Bot(token=token, parse_mode=ParseMode.HTML)
