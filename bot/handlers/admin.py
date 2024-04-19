@@ -59,7 +59,7 @@ async def admin_create_user_handler(message: Message, state: FSMContext) -> None
     else:
         message_text = "Admin muvaffaqiyatli yaratildi! ✅"
 
-    await message.answer(text=message_text)
-
-    await state.clear()
-    await command_admin_handler(message, state)
+    await message.answer(
+        text=message_text, reply_markup=AdminMenuKeyboard.get_keyboard()
+    )
+    await state.set_state(AdminStates.ADMIN)
