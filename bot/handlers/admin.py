@@ -15,9 +15,8 @@ from bot.core.loader import bot
 router = Router(name="admin")
 
 
-@router.message(Command("admin"))
-async def command_admin_handler(message: Message, state: FSMContext):
-    """Handler for the /admin command."""
+async def get_admins_message() -> str:
+    """Returns a list of all admins in the database."""
 
     message_text = "Adminlar ro'yxati 💎\n\n"
     admins = await sync_to_async(TelegramAdmin.objects.all)()
@@ -34,10 +33,18 @@ async def command_admin_handler(message: Message, state: FSMContext):
                 await sync_to_async(admin.save)()
             except Exception:
                 continue
-
         message_text += f"🆔 <code>{admin.chat_id}</code> - {admin.first_name}\n\n"
 
+    return message_text
+
+
+@router.message(Command("admin"))
+async def command_admin_handler(message: Message, state: FSMContext):
+    """Handler for the /admin command."""
+
+    message_text = await get_admins_message()
     markup = AdminMenuKeyboard.get_keyboard()
+
     await message.answer(text=message_text, reply_markup=markup)
     await state.set_state(AdminStates.ADMIN)
 
