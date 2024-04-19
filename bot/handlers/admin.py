@@ -5,6 +5,8 @@ from aiogram.types import Message, ReplyKeyboardMarkup, KeyboardButton
 
 from asgiref.sync import sync_to_async
 
+from loguru import logger
+
 from bot.keyboards.reply.admin import (
     AdminMenuKeyboard,
     get_create_admin_keyboard,
@@ -61,7 +63,7 @@ async def create_admin_handler(message: Message, state: FSMContext):
     chat_info = await bot.get_chat(chat_id)
 
     try:
-        await sync_to_async(TelegramAdmin.objects.get_or_create)(
+        await sync_to_async(TelegramAdmin.objects.create)(
             chat_id=chat_info.id,
             first_name=chat_info.first_name,
             last_name=chat_info.last_name,
@@ -82,3 +84,24 @@ async def delete_select_admin_handler(message: Message, state: FSMContext):
 
     await message.answer(text=text, reply_markup=markup)
     await state.set_state(AdminStates.DELETE)
+
+
+@router.message(AdminStates.DELETE)
+async def delete_admin_handler(message: Message, state: FSMContext):
+    try:
+        chat_id = int(message.text.split(" - ")[0])
+
+        if chat_id == message.from_user.id:
+            await message.answer("❌ Siz o'zingizni o'chirib yubormang!")
+            return
+
+        admin = await sync_to_async(TelegramAdmin.objects.get)(chat_id=chat_id)
+        await sync_to_async(admin.delete)()
+
+        text = f"🆔 {admin.chat_id} - {admin.first_name} - @{admin.username} admin o'chirildi!"
+    except Exception as e:
+        text = "❌ Xatolik yuz berdi! Admin o'chirilmadi!"
+        logger.error(f"Error: {e}")
+
+    await message.answer(text, reply_markup=AdminMenuKeyboard.get_keyboard())
+    await state.set_state(AdminStates.ADMIN)
