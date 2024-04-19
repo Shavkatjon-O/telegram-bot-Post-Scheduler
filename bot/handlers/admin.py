@@ -9,6 +9,7 @@ from bot.models import TelegramAdmin
 from bot.handlers.start import command_start_handler
 from bot.keyboards.reply.admin import AdminMenuKeyboard, get_create_admin_keyboard
 from bot.states.admins import AdminStates
+from bot.core.loader import bot
 
 
 router = Router(name="admin")
@@ -18,7 +19,25 @@ router = Router(name="admin")
 async def command_admin_handler(message: Message, state: FSMContext):
     """Handler for the /admin command."""
 
-    message_text = "Admin paneliga xush kelibsiz! 🧑‍💼"
+    telegram_admins = await sync_to_async(TelegramAdmin.objects.all)()
+
+    message_text = "Adminlar ro'yxati 💎\n\n"
+
+    async for admin in telegram_admins:
+        if not admin.username:
+            try:
+                chat_info = await bot.get_chat(admin.chat_id)
+
+                admin.username = chat_info.username
+                admin.first_name = chat_info.first_name
+                admin.last_name = chat_info.last_name
+
+                await sync_to_async(admin.save)()
+            except Exception as e:
+                continue
+
+        message_text += f"🆔 <code>{admin.chat_id}</code> - {admin.first_name}\n\n"
+
     markup = AdminMenuKeyboard.get_keyboard()
 
     await message.answer(text=message_text, reply_markup=markup)
