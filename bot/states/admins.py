@@ -13,4 +13,5 @@ class AdminStates(StatesGroup):
 
 class ChatStates(StatesGroup):
     CHAT = State()
-    CREATE_OR_DELETE = State()
+    CREATE = State()
+    DELETE = State()
