@@ -22,7 +22,7 @@ class TelegramChat(BaseModel):
 
 
 class TelegramPost(BaseModel):
-    chat_id = models.BigIntegerField(unique=True)
+    message_id = models.BigIntegerField(unique=True)
     from_chat_id = models.BigIntegerField()
 
     def __str__(self):

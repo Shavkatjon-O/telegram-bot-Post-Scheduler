@@ -20,7 +20,7 @@ from loguru import logger
 async def on_startup() -> None:
     logger.info("Starting bot...")
 
-    if settings.DEBUG:
+    if not settings.DEBUG:
         scheduler.add_job(send_post, "interval", seconds=10)
         scheduler.start()  # Background tasks scheduler
 

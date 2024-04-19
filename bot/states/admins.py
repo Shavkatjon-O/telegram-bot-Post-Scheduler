@@ -15,3 +15,7 @@ class ChatStates(StatesGroup):
     CHAT = State()
     CREATE = State()
     DELETE = State()
+
+
+class PostStates(StatesGroup):
+    POST = State()
