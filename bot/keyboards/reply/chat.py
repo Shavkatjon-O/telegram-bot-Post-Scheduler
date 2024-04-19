@@ -2,7 +2,7 @@ from aiogram.types import ReplyKeyboardMarkup, KeyboardButtonRequestChat
 from aiogram.utils.keyboard import ReplyKeyboardBuilder, KeyboardButton
 
 
-class ChatKeyboard:
+class ChatMenuKeyboard:
     CREATE = "Qo'shish ➕"
     DELETE = "O'chirish ➖"
     MENU = "Asosiy menyu 🏠"
