@@ -8,6 +8,7 @@ class StartStates(StatesGroup):
 class AdminStates(StatesGroup):
     ADMIN = State()
     CREATE = State()
+    DELETE = State()
 
 
 class ChatStates(StatesGroup):

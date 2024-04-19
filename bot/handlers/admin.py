@@ -1,7 +1,7 @@
 from aiogram import Router, F
 from aiogram.filters import Command
 from aiogram.fsm.context import FSMContext
-from aiogram.types import Message
+from aiogram.types import Message, ReplyKeyboardMarkup, KeyboardButton
 
 from asgiref.sync import sync_to_async
 
@@ -63,3 +63,17 @@ async def admin_create_user_handler(message: Message, state: FSMContext) -> None
         text=message_text, reply_markup=AdminMenuKeyboard.get_keyboard()
     )
     await state.set_state(AdminStates.ADMIN)
+
+
+@router.message(AdminStates.ADMIN, F.text == AdminMenuKeyboard.DELETE)
+async def admin_delete_handler(message: Message, state: FSMContext) -> None:
+    """Handler for the "Delete" button in the admin panel."""
+
+    admins = await sync_to_async(TelegramAdmin.objects.all)()
+    message_text = "O'chirish uchun foydalanuvchini tanlang! 🧑‍💼"
+
+    markup = ReplyKeyboardMarkup(
+        keyboard=[[KeyboardButton(text=str(admin.chat_id))] async for admin in admins],
+        resize_keyboard=True,
+    )
+    await message.answer(text=message_text, reply_markup=markup)
