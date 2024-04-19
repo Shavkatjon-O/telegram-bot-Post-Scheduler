@@ -9,3 +9,7 @@ from bot.handlers.start import command_start_handler
 
 
 router = Router(name="chat")
+
+
+@router.message(Command("chat"))
+async def command_chat_handler(message: Message, state: FSMContext): ...

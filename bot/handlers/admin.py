@@ -13,3 +13,19 @@ from bot.core.loader import bot
 
 
 router = Router(name="admin")
+
+
+@sync_to_async
+def get_admin_list() -> str:
+    admins = TelegramAdmin.objects.all()
+    if not admins:
+        return "🚫 Xozircha adminlar ro'yxati bo'sh!"
+
+    text = "💎 Bot adminlari:\n\n"
+    for admin in admins:
+        text += f"🆔 {admin.chat_id} - {admin.first_name} - @{admin.username}\n"
+    return text
+
+
+@router.message(Command("admin"))
+async def command_admin_handler(message: Message, state: FSMContext): ...
