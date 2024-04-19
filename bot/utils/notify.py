@@ -19,4 +19,8 @@ async def notify_admins() -> None:
             "/post - Post yaratish\n\n"
             "Bot haqida batafsil ma'lumot uchun /help buyrug'ini bering. 📚"
         )
-        await bot.send_message(admin.chat_id, text=message_text)
+
+        try:
+            await bot.send_message(admin.chat_id, text=message_text)
+        except Exception:
+            continue
