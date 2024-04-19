@@ -48,3 +48,9 @@ async def chat_create_handler(message: Message, state: FSMContext):
 
     await message.answer(text, reply_markup=markup)
     await state.set_state(ChatStates.CREATE)
+
+
+@router.message(ChatStates.CREATE, F.text == "Bekor qilish ❌")
+async def chat_cancel_handler(message: Message, state: FSMContext):
+    await state.clear()
+    await command_chat_handler(message, state)
