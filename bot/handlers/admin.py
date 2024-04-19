@@ -34,3 +34,9 @@ async def command_admin_handler(message: Message, state: FSMContext):
 
     await message.answer(text, reply_markup=markup)
     await state.set_state(AdminStates.ADMIN)
+
+
+@router.message(AdminStates.ADMIN, F.text == AdminMenuKeyboard.MENU)
+async def admin_menu_handler(message: Message, state: FSMContext):
+    await state.clear()
+    await command_start_handler(message, state)
