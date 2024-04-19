@@ -77,3 +77,25 @@ async def admin_delete_handler(message: Message, state: FSMContext) -> None:
         resize_keyboard=True,
     )
     await message.answer(text=message_text, reply_markup=markup)
+    await state.set_state(AdminStates.DELETE)
+
+
+@router.message(AdminStates.DELETE)
+async def admin_delete_user_handler(message: Message, state: FSMContext) -> None:
+    """Handler for deleting an admin."""
+
+    try:
+        chat_id = int(message.text)
+        admin = await sync_to_async(TelegramAdmin.objects.get)(chat_id=chat_id)
+        await sync_to_async(admin.delete)()
+
+        message_text = "Admin o'chirildi! ✅"
+        await message.answer(
+            text=message_text, reply_markup=AdminMenuKeyboard.get_keyboard()
+        )
+    except Exception:
+        message_text = "Foydalanuvchi topilmadi! ❌"
+        await message.answer(
+            text=message_text, reply_markup=AdminMenuKeyboard.get_keyboard()
+        )
+    await state.set_state(AdminStates.ADMIN)
