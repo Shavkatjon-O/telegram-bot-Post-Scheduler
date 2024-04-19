@@ -39,3 +39,12 @@ async def command_chat_handler(message: Message, state: FSMContext):
 async def chat_menu_handler(message: Message, state: FSMContext):
     await state.clear()
     await command_start_handler(message, state)
+
+
+@router.message(ChatStates.CHAT, F.text == ChatMenuKeyboard.CREATE)
+async def chat_create_handler(message: Message, state: FSMContext):
+    text = "📝 Kanal yoki guruhni tanlang"
+    markup = SelectChatKeyboard.get_keyboard()
+
+    await message.answer(text, reply_markup=markup)
+    await state.set_state(ChatStates.CREATE)
