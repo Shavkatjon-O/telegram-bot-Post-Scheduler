@@ -19,3 +19,11 @@ class TelegramChat(BaseModel):
 
     def __str__(self):
         return f"{self.chat_id}"
+
+
+class TelegramPost(BaseModel):
+    chat_id = models.BigIntegerField(unique=True)
+    from_chat_id = models.BigIntegerField()
+
+    def __str__(self):
+        return str(self.chat_id)
