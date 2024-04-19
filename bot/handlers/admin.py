@@ -19,11 +19,10 @@ router = Router(name="admin")
 async def command_admin_handler(message: Message, state: FSMContext):
     """Handler for the /admin command."""
 
-    telegram_admins = await sync_to_async(TelegramAdmin.objects.all)()
-
     message_text = "Adminlar ro'yxati 💎\n\n"
+    admins = await sync_to_async(TelegramAdmin.objects.all)()
 
-    async for admin in telegram_admins:
+    async for admin in admins:
         if not admin.username:
             try:
                 chat_info = await bot.get_chat(admin.chat_id)
@@ -33,13 +32,12 @@ async def command_admin_handler(message: Message, state: FSMContext):
                 admin.last_name = chat_info.last_name
 
                 await sync_to_async(admin.save)()
-            except Exception as e:
+            except Exception:
                 continue
 
         message_text += f"🆔 <code>{admin.chat_id}</code> - {admin.first_name}\n\n"
 
     markup = AdminMenuKeyboard.get_keyboard()
-
     await message.answer(text=message_text, reply_markup=markup)
     await state.set_state(AdminStates.ADMIN)
 
