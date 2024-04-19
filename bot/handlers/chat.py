@@ -8,7 +8,11 @@ from asgiref.sync import sync_to_async
 from loguru import logger
 
 from bot.states.admins import ChatStates
-from bot.keyboards.reply.chat import ChatMenuKeyboard, SelectChatKeyboard
+from bot.keyboards.reply.chat import (
+    ChatMenuKeyboard,
+    SelectChatKeyboard,
+    get_delete_chat_keyboard,
+)
 from bot.handlers.start import command_start_handler
 from bot.models import TelegramChat
 
@@ -77,3 +81,16 @@ async def chat_selected_handler(message: Message, state: FSMContext):
 
     await message.answer(text, reply_markup=ChatMenuKeyboard.get_keyboard())
     await state.set_state(ChatStates.CHAT)
+
+
+@router.message(ChatStates.CHAT, F.text == ChatMenuKeyboard.DELETE)
+async def chat_delete_handler(message: Message, state: FSMContext):
+    markup = await get_delete_chat_keyboard()
+    await message.answer("❌ O'chirish uchun chatni tanlang", reply_markup=markup)
+    await state.set_state(ChatStates.DELETE)
+
+
+@router.message(ChatStates.DELETE, (F.text == "Orqaga 🔙"))
+async def chat_delete_cancel_handler(message: Message, state: FSMContext):
+    await state.clear()
+    await command_chat_handler(message, state)
