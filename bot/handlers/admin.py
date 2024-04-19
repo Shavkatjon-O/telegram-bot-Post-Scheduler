@@ -107,10 +107,6 @@ async def admin_delete_handler(message: Message, state: FSMContext) -> None:
 async def admin_delete_user_handler(message: Message, state: FSMContext) -> None:
     """Handler for deleting an admin."""
 
-    if message.text == message.from_user.id:
-        await message.answer("O'zingizni o'chirib bo'lmaydi! ❌")
-        return
-
     try:
         admin = await sync_to_async(TelegramAdmin.objects.get)(chat_id=message.text)
         await sync_to_async(admin.delete)()
