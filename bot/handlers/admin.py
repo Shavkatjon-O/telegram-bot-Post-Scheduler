@@ -5,9 +5,13 @@ from aiogram.types import Message, ReplyKeyboardMarkup, KeyboardButton
 
 from asgiref.sync import sync_to_async
 
+from bot.keyboards.reply.admin import (
+    AdminMenuKeyboard,
+    get_create_admin_keyboard,
+    get_delete_admin_keyboard,
+)
 from bot.models import TelegramAdmin
 from bot.handlers.start import command_start_handler
-from bot.keyboards.reply.admin import AdminMenuKeyboard, get_create_admin_keyboard
 from bot.states.admins import AdminStates
 from bot.core.loader import bot
 
@@ -69,3 +73,12 @@ async def create_admin_handler(message: Message, state: FSMContext):
 
     await message.answer(text, reply_markup=AdminMenuKeyboard.get_keyboard())
     await state.set_state(AdminStates.ADMIN)
+
+
+@router.message(AdminStates.ADMIN, F.text == AdminMenuKeyboard.DELETE)
+async def delete_select_admin_handler(message: Message, state: FSMContext):
+    markup = await get_delete_admin_keyboard()
+    text = "🗑 O'chirish uchun admin tanlang!"
+
+    await message.answer(text=text, reply_markup=markup)
+    await state.set_state(AdminStates.DELETE)

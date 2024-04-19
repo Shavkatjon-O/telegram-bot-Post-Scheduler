@@ -37,7 +37,8 @@ def get_delete_admin_keyboard() -> ReplyKeyboardMarkup:
     admins = TelegramAdmin.objects.all()
 
     buttons = [
-        [KeyboardButton(text=f"{admin.chat_id} - {admin.username}")] for admin in admins
+        [KeyboardButton(text=f"{admin.chat_id} - {admin.first_name}")]
+        for admin in admins
     ]
     buttons.append([KeyboardButton(text="Orqaga 🔙")])
 
