@@ -13,6 +13,8 @@ async def send_posts() -> None:
         posts = await sync_to_async(TelegramPost.objects.all)()
 
         async for post in posts:
+            await asyncio.sleep(3600)
+
             async for chat in chats:
                 try:
                     await bot.copy_message(
@@ -24,4 +26,3 @@ async def send_posts() -> None:
                 except Exception as e:
                     logger.error(e)
                     continue
-            await asyncio.sleep(3600)
