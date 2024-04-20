@@ -1,21 +1,25 @@
 import os
 import django
 import environ
+import asyncio
 
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "core.settings")
 django.setup()
 
 from django.conf import settings
 
+from loguru import logger
+
 from bot.handlers import get_handlers_rounter
 from bot.utils.notify import notify_admins
 from bot.core.loader import dp, bot
-
-from loguru import logger
+from bot.schedule import send_posts
 
 
 async def on_startup() -> None:
     logger.info("Starting bot...")
+
+    asyncio.create_task(send_posts())
 
     dp.include_router(get_handlers_rounter())
 
