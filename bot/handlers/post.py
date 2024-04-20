@@ -7,6 +7,7 @@ from asgiref.sync import sync_to_async
 from loguru import logger
 
 from bot.models import TelegramPost
+from bot.filters.admin import AdminFilter
 from bot.handlers.start import command_start_handler
 from bot.states.admins import PostStates, StartStates
 from bot.keyboards.reply.start import StartKeyboard
@@ -15,7 +16,7 @@ from bot.keyboards.reply.start import StartKeyboard
 router = Router(name="post")
 
 
-@router.message(Command("post"))
+@router.message(Command("post"), AdminFilter())
 async def command_post_handler(message: Message, state: FSMContext):
     text = "Menga postni yuboring 📝"
 

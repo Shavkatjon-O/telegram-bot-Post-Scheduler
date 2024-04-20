@@ -3,6 +3,7 @@ from aiogram.filters import CommandStart
 from aiogram.fsm.context import FSMContext
 from aiogram.types import Message
 
+from bot.filters.admin import AdminFilter
 from bot.keyboards.reply.start import StartKeyboard, get_buttons
 from bot.states.admins import StartStates
 

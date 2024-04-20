@@ -14,6 +14,7 @@ from bot.keyboards.reply.chat import (
     get_delete_chat_keyboard,
 )
 from bot.handlers.start import command_start_handler
+from bot.filters.admin import AdminFilter
 from bot.models import TelegramChat
 
 
@@ -32,7 +33,7 @@ def get_chat_list() -> str:
     return text
 
 
-@router.message(Command("chat"))
+@router.message(Command("chat"), AdminFilter())
 async def command_chat_handler(message: Message, state: FSMContext):
     text = await get_chat_list()
     markup = ChatMenuKeyboard.get_keyboard()

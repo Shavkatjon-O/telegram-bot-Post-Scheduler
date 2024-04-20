@@ -2,13 +2,14 @@ from aiogram import Router
 from aiogram.filters import Command
 from aiogram.types import Message
 
+from bot.filters.admin import AdminFilter
 from bot.core.loader import bot
 
 
 router = Router(name="help")
 
 
-@router.message(Command("help"))
+@router.message(Command("help"), AdminFilter())
 async def command_help_handler(message: Message, state=None):
     """Handler for /help command."""
 

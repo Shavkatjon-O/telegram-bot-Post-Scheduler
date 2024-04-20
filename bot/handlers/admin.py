@@ -15,6 +15,7 @@ from bot.keyboards.reply.admin import (
 from bot.models import TelegramAdmin
 from bot.handlers.start import command_start_handler
 from bot.states.admins import AdminStates
+from bot.filters.admin import AdminFilter
 from bot.core.loader import bot
 
 
@@ -33,7 +34,7 @@ def get_admin_list() -> str:
     return text
 
 
-@router.message(Command("admin"))
+@router.message(Command("admin"), AdminFilter())
 async def command_admin_handler(message: Message, state: FSMContext):
     text = await get_admin_list()
     markup = AdminMenuKeyboard.get_keyboard()
