@@ -30,6 +30,18 @@ def get_admin_list() -> str:
 
     text = "💎 Bot adminlari:\n\n"
     for admin in admins:
+        if not admin.username:
+            try:
+                chat_info = bot.get_chat(admin.chat_id)
+
+                admin.username = chat_info.username
+                admin.first_name = chat_info.first_name
+                admin.last_name = chat_info.last_name
+                admin.save()
+
+            except Exception as e:
+                logger.error(e)
+
         text += f"🆔 {admin.chat_id} - {admin.first_name} - @{admin.username}\n"
     return text
 
