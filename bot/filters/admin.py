@@ -15,7 +15,4 @@ class AdminFilter(BaseFilter):
             TelegramAdmin.objects.filter(chat_id=message.from_user.id).exists
         )()
 
-        if not is_admin:
-            await message.answer("Siz administrator emassiz! 😔")
-
         return is_admin

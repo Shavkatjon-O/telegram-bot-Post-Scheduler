@@ -11,7 +11,7 @@ from bot.states.admins import StartStates
 router = Router(name="start")
 
 
-@router.message(CommandStart())
+@router.message(CommandStart(), AdminFilter())
 async def command_start_handler(message: Message, state: FSMContext) -> None:
     """Handler for the /start command."""
 

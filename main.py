@@ -19,7 +19,8 @@ from bot.schedule import send_posts
 async def on_startup() -> None:
     logger.info("Starting bot...")
 
-    asyncio.create_task(send_posts())
+    if not settings.DEBUG:
+        asyncio.create_task(send_posts())
 
     dp.include_router(get_handlers_rounter())
 
