@@ -24,4 +24,4 @@ async def send_posts() -> None:
                 except Exception as e:
                     logger.error(e)
                     continue
-            await asyncio.sleep(5)
+            await asyncio.sleep(3600)
