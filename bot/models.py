@@ -26,4 +26,4 @@ class TelegramPost(BaseModel):
     from_chat_id = models.BigIntegerField()
 
     def __str__(self):
-        return str(self.chat_id)
+        return str(self.message_id)
