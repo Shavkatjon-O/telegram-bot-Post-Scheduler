@@ -20,7 +20,11 @@ async def on_startup() -> None:
     logger.info("Starting bot...")
 
     if not settings.DEBUG:
+        # Start the scheduler
         asyncio.create_task(send_posts())
+
+        # Notify admins about the bot start
+        await notify_admins()
 
     dp.include_router(get_handlers_rounter())
 
@@ -39,8 +43,6 @@ async def on_startup() -> None:
     logger.info(f"Groups Mode  - {states[bot_info.can_join_groups]}")
     logger.info(f"Privacy Mode - {states[not bot_info.can_read_all_group_messages]}")
     logger.info(f"Inline Mode  - {states[bot_info.supports_inline_queries]}")
-
-    await notify_admins()
 
     logger.info("Bot started!")
 

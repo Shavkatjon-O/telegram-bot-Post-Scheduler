@@ -19,3 +19,7 @@ class ChatStates(StatesGroup):
 
 class PostStates(StatesGroup):
     POST = State()
+
+
+class RemoveStates(StatesGroup):
+    REMOVE = State()
