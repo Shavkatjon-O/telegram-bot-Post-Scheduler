@@ -1,4 +1,4 @@
-from aiogram import Router
+from aiogram import Router, F
 from aiogram.filters import Command
 from aiogram.fsm.context import FSMContext
 from aiogram.types import Message
@@ -10,7 +10,9 @@ from bot.models import TelegramPost
 from bot.filters.admin import AdminFilter
 from bot.handlers.start import command_start_handler
 from bot.states.admins import PostStates, StartStates
+
 from bot.keyboards.reply.start import StartKeyboard
+from bot.keyboards.reply.post import CancelKeyboard
 
 
 router = Router(name="post")
@@ -20,8 +22,13 @@ router = Router(name="post")
 async def command_post_handler(message: Message, state: FSMContext):
     text = "Menga postni yuboring 📝"
 
-    await message.answer(text)
+    await message.answer(text, reply_markup=CancelKeyboard.get_keyboard())
     await state.set_state(PostStates.POST)
+
+
+@router.message(PostStates.POST, F.text == CancelKeyboard.CANCEL)
+async def post_cancel_handler(message: Message, state: FSMContext):
+    await command_start_handler(message, state)
 
 
 @router.message(PostStates.POST)
