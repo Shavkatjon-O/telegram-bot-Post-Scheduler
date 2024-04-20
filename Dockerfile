@@ -20,6 +20,4 @@ WORKDIR $APP_HOME
 
 COPY . .
 
-RUN ["chmod", "+x", "/home/app/web/entrypoint.sh"]
-
-ENTRYPOINT ["/home/app/web/entrypoint.sh"]
+RUN ["python", "manage.py", "migrate"]
