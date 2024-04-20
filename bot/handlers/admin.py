@@ -3,7 +3,7 @@ from aiogram.filters import Command
 from aiogram.fsm.context import FSMContext
 from aiogram.types import Message, ReplyKeyboardMarkup, KeyboardButton
 
-from asgiref.sync import sync_to_async
+from asgiref.sync import sync_to_async, async_to_sync
 
 from loguru import logger
 
@@ -32,7 +32,7 @@ def get_admin_list() -> str:
     for admin in admins:
         if not admin.username:
             try:
-                chat_info = bot.get_chat(admin.chat_id)
+                chat_info = async_to_sync(bot.get_chat)(admin.chat_id)
 
                 admin.username = chat_info.username
                 admin.first_name = chat_info.first_name
