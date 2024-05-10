@@ -18,4 +18,6 @@ ENV APP_HOME=/home/app/web
 
 WORKDIR $APP_HOME
 
+RUN python manage.py migrate
+
 COPY . .
